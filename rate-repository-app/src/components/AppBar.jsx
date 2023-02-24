@@ -4,6 +4,7 @@ import AppBarTab from "./AppTab";
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
     paddingTop: Constants.statusBarHeight,
     paddingBottom: 10,
     backgroundColor: "#24292e",
@@ -13,7 +14,8 @@ const styles = StyleSheet.create({
 const AppBar = () => {
   return (
     <View style={styles.container}>
-      <AppBarTab>Repositories</AppBarTab>
+      <AppBarTab link="/">Repositories</AppBarTab>
+      <AppBarTab link="/signin">Sign in</AppBarTab>
     </View>
   );
 };

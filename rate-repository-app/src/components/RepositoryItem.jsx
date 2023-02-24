@@ -115,7 +115,6 @@ const Footer = ({
     },
   });
   const Stat = ({ count, children }) => {
-    console.log(count);
     const shortenedCount = () => {
       if (count >= 10 ** 6) {
         const num = Math.trunc(count / 10 ** 5) / 10;
@@ -128,7 +127,6 @@ const Footer = ({
 
       return count;
     };
-    console.log(shortenedCount());
     return (
       <View>
         <Text fontSize="subheading" fontWeight="bold">
