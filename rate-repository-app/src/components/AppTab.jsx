@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-const AppTab = ({ children }) => {
+const AppBarTab = ({ children }) => {
   return (
     <View style={styles.item}>
       <Pressable onPress={() => console.log("pressed:", children)}>
@@ -16,4 +16,4 @@ const AppTab = ({ children }) => {
   );
 };
 
-export default AppTab;
+export default AppBarTab;
