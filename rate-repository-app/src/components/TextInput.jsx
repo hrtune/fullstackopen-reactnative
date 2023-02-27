@@ -1,9 +1,15 @@
-import { TextInput as NativeTextInput } from "react-native";
+import { TextInput as NativeTextInput, StyleSheet } from "react-native";
 
-// const styles = StyleSheet.create({});
+const red = "#d73a4a";
 
-const TextInput = ({ style, ...props }) => {
-  const textInputStyle = [style];
+const styles = StyleSheet.create({
+  error: {
+    borderColor: red,
+  },
+});
+
+const TextInput = ({ style, error, ...props }) => {
+  const textInputStyle = error ? [style, styles.error] : style;
 
   return <NativeTextInput style={textInputStyle} {...props} />;
 };

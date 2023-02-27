@@ -3,6 +3,7 @@ import { View, Pressable, StyleSheet } from "react-native";
 import FormikTextInput from "./FormikTextInput";
 import theme from "../theme";
 import { Formik } from "formik";
+import * as yup from "yup";
 
 const SignInForm = ({ onSubmit }) => {
   const styles = StyleSheet.create({
@@ -57,6 +58,11 @@ const SignInForm = ({ onSubmit }) => {
   );
 };
 
+const validationSchema = yup.object().shape({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+});
+
 const SignIn = () => {
   const onSubmit = (values) => {
     const { username, password } = values;
@@ -67,7 +73,11 @@ const SignIn = () => {
     password: "",
   };
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+    >
       {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
     </Formik>
   );
