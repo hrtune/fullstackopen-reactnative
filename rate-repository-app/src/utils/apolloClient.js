@@ -4,7 +4,6 @@ import Constants from "expo-constants";
 console.log(Constants.manifest);
 
 const httpLink = createHttpLink({
-  // Replace the IP address part with your own IP address!
   uri: Constants.manifest.extra.apolloUri,
 });
 
