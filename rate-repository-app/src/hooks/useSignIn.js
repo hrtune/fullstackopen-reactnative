@@ -6,12 +6,24 @@ This input type contains username and password fields.
 
 import { useMutation } from "@apollo/client";
 import { AUTHENTICATE } from "../graphql/mutations";
+import { useAuthStorage } from "./useAuthStorage";
+import { useApolloClient } from "@apollo/client";
+import { useNavigate } from "react-router-native";
 
 const useSignIn = () => {
+  const authStorage = useAuthStorage();
   const [mutate, result] = useMutation(AUTHENTICATE);
+  const apolloClient = useApolloClient();
+  const navigate = useNavigate();
 
   const signIn = async ({ username, password }) => {
-    return await mutate({ variables: { username, password } });
+    const response = await mutate({ variables: { username, password } });
+    console.log(response.data);
+    const accessToken = response.data.authenticate.accessToken;
+    await authStorage.setAccessToken(accessToken);
+    apolloClient.resetStore();
+    navigate("/");
+    return response;
   };
 
   return [signIn, result];
