@@ -73,6 +73,14 @@ const RepositoryList = () => {
         .filter((n) => n.userHasReviewed)
     : [];
 
+  if (!repositoryNodes.length) {
+    return (
+      <View>
+        <Text>No reviewed repositories...</Text>
+      </View>
+    );
+  }
+
   return (
     <View>
       <FlatList
