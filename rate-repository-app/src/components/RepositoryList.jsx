@@ -2,6 +2,7 @@ import { FlatList, View, StyleSheet } from "react-native";
 import RepositoryItem from "./RepositoryItem";
 import useRepositories from "../hooks/useRepositories";
 import Text from "./Text";
+// import useMe from "../hooks/useMe";
 
 const styles = StyleSheet.create({
   separator: {
@@ -60,18 +61,16 @@ const repositories = [
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
-  const { repositories, loading } = useRepositories();
+export const RepositoryListContainer = ({ repositories }) => {
+  // const { me } = useMe();
 
-  if (loading) {
-    return <Text>loading...</Text>;
-  }
-
-  const repositoryNodes = repositories
-    ? repositories.edges
-        .map((edge) => edge.node)
-        .filter((n) => n.userHasReviewed)
+  const repositoryAllNodes = repositories
+    ? repositories.edges.map((edge) => edge.node)
     : [];
+
+  const repositoryNodes = /* me
+    ? repositoryAllNodes.filter((n) => n.userHasReviewed)
+    : */ repositoryAllNodes;
 
   if (!repositoryNodes.length) {
     return (
@@ -90,6 +89,11 @@ const RepositoryList = () => {
       />
     </View>
   );
+};
+
+const RepositoryList = () => {
+  const { repositories } = useRepositories();
+  return <RepositoryListContainer repositories={repositories} />;
 };
 
 export default RepositoryList;

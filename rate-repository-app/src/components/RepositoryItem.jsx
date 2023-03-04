@@ -128,7 +128,7 @@ const Footer = ({
       return count;
     };
     return (
-      <View>
+      <View testID={children}>
         <Text fontSize="subheading" fontWeight="bold">
           {shortenedCount()}
         </Text>
@@ -175,7 +175,7 @@ const RepositoryItem = ({
     ratingAverage,
   };
   return (
-    <View style={itemStyles.container}>
+    <View style={itemStyles.container} testID="repositoryItem">
       <Header {...headerProps} />
       <Footer {...footerProps} />
     </View>
