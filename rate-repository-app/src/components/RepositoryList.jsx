@@ -85,7 +85,7 @@ export const RepositoryListContainer = ({ repositories }) => {
       <FlatList
         data={repositoryNodes}
         ItemSeparatorComponent={ItemSeparator}
-        renderItem={({ item }) => <RepositoryItem {...item} />}
+        renderItem={({ item }) => <RepositoryItem repository={item} />}
       />
     </View>
   );

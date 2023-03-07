@@ -6,7 +6,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useSignIn from "../hooks/useSignIn";
 
-const SignInForm = ({ onSubmit }) => {
+const SignInView = ({ onSubmit }) => {
   const styles = StyleSheet.create({
     container: {
       alignItems: "stretch",
@@ -64,19 +64,7 @@ const validationSchema = yup.object().shape({
   password: yup.string().required("Password is required"),
 });
 
-const SignIn = () => {
-  const [signIn] = useSignIn();
-  const onSubmit = async (values) => {
-    const { username, password } = values;
-    console.log({ username, password });
-    try {
-      const { data } = await signIn({ username, password });
-      console.log(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
+export const SignInForm = ({ onSubmit }) => {
   const initialValues = {
     username: "",
     password: "",
@@ -88,9 +76,24 @@ const SignIn = () => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
+      {({ handleSubmit }) => <SignInView onSubmit={handleSubmit} />}
     </Formik>
   );
+};
+
+const SignIn = () => {
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    const [signIn] = useSignIn();
+    console.log({ username, password });
+    try {
+      const { data } = await signIn({ username, password });
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  return <SignInForm onSubmit={onSubmit} />;
 };
 
 export default SignIn;

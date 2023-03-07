@@ -1,13 +1,19 @@
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, Pressable } from "react-native";
 import Text from "./Text";
 import theme from "../theme";
+import { useNavigate } from "react-router-native";
 
-const Header = ({ fullName, ownerAvatarUrl, description, language }) => {
+const Header = ({ fullName, ownerAvatarUrl, description, language, id }) => {
+  const navigate = useNavigate();
   const headerStyles = StyleSheet.create({
     container: {
       flexDirection: "row",
     },
   });
+
+  const navToRepo = () => {
+    navigate(`/repository/${id}`);
+  };
   const Avatar = () => {
     const avaterStyles = StyleSheet.create({
       container: {
@@ -85,8 +91,10 @@ const Header = ({ fullName, ownerAvatarUrl, description, language }) => {
     };
     return (
       <View style={styles.container}>
-        <Name />
-        <Description />
+        <Pressable onPress={navToRepo}>
+          <Name />
+          <Description />
+        </Pressable>
         <Language />
       </View>
     );
@@ -146,27 +154,31 @@ const Footer = ({
   );
 };
 
-const RepositoryItem = ({
-  fullName,
-  description,
-  language,
-  forksCount,
-  stargazersCount,
-  ratingAverage,
-  reviewCount,
-  ownerAvatarUrl,
-}) => {
+const RepositoryItem = ({ repository }) => {
   const itemStyles = StyleSheet.create({
     container: {
       alignItems: "stretch",
       backgroundColor: "#FFFFFF",
     },
   });
+
+  const {
+    fullName,
+    description,
+    language,
+    forksCount,
+    stargazersCount,
+    ratingAverage,
+    reviewCount,
+    ownerAvatarUrl,
+    id,
+  } = repository;
   const headerProps = {
     fullName,
     ownerAvatarUrl,
     description,
     language,
+    id,
   };
   const footerProps = {
     stargazersCount,
