@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import theme from "./src/theme";
+import theme from "./theme";
 
 export const buttonStyle = StyleSheet.create({
   button: {
@@ -15,5 +15,12 @@ export const buttonStyle = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
+  },
+});
+
+export const separatorStyle = StyleSheet.create({
+  separator: {
+    height: 10,
+    backgroundColor: "#ecf0f1",
   },
 });

@@ -1,6 +1,6 @@
 import { Pressable } from "react-native";
 import Text from "./Text";
-import { buttonStyle as styles } from "../../style";
+import { buttonStyle as styles } from "../style";
 
 const Button = ({ onPress, children }) => {
   return (
