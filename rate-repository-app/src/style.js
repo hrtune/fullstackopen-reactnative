@@ -24,3 +24,19 @@ export const separatorStyle = StyleSheet.create({
     backgroundColor: "#ecf0f1",
   },
 });
+
+export const inputStyle = StyleSheet.create({
+  input: {
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "grey",
+    borderRadius: 3,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingStart: 5,
+    paddingEnd: 5,
+    marginTop: 10,
+    marginStart: 10,
+    marginEnd: 10,
+  },
+});

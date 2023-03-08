@@ -82,9 +82,9 @@ export const SignInForm = ({ onSubmit }) => {
 };
 
 const SignIn = () => {
+  const [signIn] = useSignIn();
   const onSubmit = async (values) => {
     const { username, password } = values;
-    const [signIn] = useSignIn();
     console.log({ username, password });
     try {
       const { data } = await signIn({ username, password });
