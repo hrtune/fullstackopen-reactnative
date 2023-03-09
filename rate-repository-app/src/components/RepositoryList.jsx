@@ -2,6 +2,8 @@ import { FlatList, View, StyleSheet } from "react-native";
 import RepositoryItem from "./RepositoryItem";
 import useRepositories from "../hooks/useRepositories";
 import Text from "./Text";
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
 // import useMe from "../hooks/useMe";
 
 const styles = StyleSheet.create({
@@ -61,7 +63,7 @@ const repositories = [
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories }) => {
+export const RepositoryListContainer = ({ repositories, SortPicker }) => {
   // const { me } = useMe();
 
   const repositoryAllNodes = repositories
@@ -85,6 +87,7 @@ export const RepositoryListContainer = ({ repositories }) => {
       <FlatList
         data={repositoryNodes}
         ItemSeparatorComponent={ItemSeparator}
+        ListHeaderComponent={SortPicker}
         renderItem={({ item }) => <RepositoryItem repository={item} />}
       />
     </View>
@@ -92,8 +95,38 @@ export const RepositoryListContainer = ({ repositories }) => {
 };
 
 const RepositoryList = () => {
-  const { repositories } = useRepositories();
-  return <RepositoryListContainer repositories={repositories} />;
+  const [sorting, setSorting] = useState("latest");
+  const SortPicker = () => {
+    return (
+      <View>
+        <Picker
+          selectedValue={sorting}
+          onValueChange={(itemValue) => {
+            setSorting(itemValue);
+            console.log(itemValue, "selected");
+          }}
+        >
+          <Picker.Item label="Latest repositories" value="latest" />
+          <Picker.Item
+            label="Highest rated repositories"
+            value="highestRated"
+          />
+          <Picker.Item label="Lowest rated repositories" value="lowestRated" />
+        </Picker>
+      </View>
+    );
+  };
+
+  const orderBy = sorting === "latest" ? "CREATED_AT" : "RATING_AVERAGE";
+  const orderDirection = sorting === "lowestRated" ? "ASC" : "DESC";
+
+  const { repositories } = useRepositories(orderBy, orderDirection);
+  return (
+    <RepositoryListContainer
+      repositories={repositories}
+      SortPicker={SortPicker}
+    />
+  );
 };
 
 export default RepositoryList;
