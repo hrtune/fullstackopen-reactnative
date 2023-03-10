@@ -4,6 +4,10 @@ import useRepositories from "../hooks/useRepositories";
 import Text from "./Text";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import { inputStyle } from "../style";
+import TextInput from "./TextInput";
+import { useDebouncedCallback } from "use-debounce";
+import { Component } from "react";
 // import useMe from "../hooks/useMe";
 
 const styles = StyleSheet.create({
@@ -63,7 +67,35 @@ const repositories = [
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories, SortPicker }) => {
+export class RepositoryListContainer extends Component {
+  renderHeader = () => {
+    const RepositoryListHeader = this.props.RepositoryListHeader;
+    return <RepositoryListHeader />;
+  };
+
+  getRepositories() {
+    const repositories = this.props.repositories;
+    return repositories ? repositories.edges.map((e) => e.node) : [];
+  }
+
+  render() {
+    return (
+      <View>
+        <FlatList
+          data={this.getRepositories()}
+          ItemSeparatorComponent={ItemSeparator}
+          ListHeaderComponent={this.renderHeader}
+          renderItem={({ item }) => <RepositoryItem repository={item} />}
+        />
+      </View>
+    );
+  }
+}
+
+export const RepositoryListContainerFunction = ({
+  repositories,
+  ListHeader,
+}) => {
   // const { me } = useMe();
 
   const repositoryAllNodes = repositories
@@ -87,16 +119,35 @@ export const RepositoryListContainer = ({ repositories, SortPicker }) => {
       <FlatList
         data={repositoryNodes}
         ItemSeparatorComponent={ItemSeparator}
-        ListHeaderComponent={SortPicker}
+        ListHeaderComponent={ListHeader}
         renderItem={({ item }) => <RepositoryItem repository={item} />}
       />
     </View>
   );
 };
 
-const RepositoryList = () => {
-  const [sorting, setSorting] = useState("latest");
+const ListHeader = ({ useSorting, useKeyword }) => {
+  const SearchBox = () => {
+    const [keyword, setKeyword] = useKeyword;
+    const [text, setText] = useState(keyword);
+    const lazySetKeyword = useDebouncedCallback(() => {
+      setKeyword(text);
+    }, 500);
+    return (
+      <View>
+        <TextInput
+          onChangeText={(value) => {
+            setText(value);
+            lazySetKeyword();
+          }}
+          value={text}
+          style={inputStyle.input}
+        />
+      </View>
+    );
+  };
   const SortPicker = () => {
+    const [sorting, setSorting] = useSorting;
     return (
       <View>
         <Picker
@@ -116,15 +167,25 @@ const RepositoryList = () => {
       </View>
     );
   };
+  return (
+    <View style={{ alignItems: "stretch" }}>
+      <SearchBox />
+      <SortPicker />
+    </View>
+  );
+};
 
-  const orderBy = sorting === "latest" ? "CREATED_AT" : "RATING_AVERAGE";
-  const orderDirection = sorting === "lowestRated" ? "ASC" : "DESC";
+const RepositoryList = () => {
+  const { useKeyword, useSorting, repositories } = useRepositories();
 
-  const { repositories } = useRepositories(orderBy, orderDirection);
+  const Header = () => (
+    <ListHeader useKeyword={useKeyword} useSorting={useSorting} />
+  );
+
   return (
     <RepositoryListContainer
       repositories={repositories}
-      SortPicker={SortPicker}
+      RepositoryListHeader={Header}
     />
   );
 };
