@@ -1,7 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { ME } from "../graphql/queries";
-const useMe = () => {
-  const { data, error, loading } = useQuery(ME);
+const useMe = (includeReviews = false) => {
+  const { data, error, loading } = useQuery(ME, {
+    variables: {
+      includeReviews,
+    },
+  });
   return {
     me: data ? data.me : undefined,
     error,
