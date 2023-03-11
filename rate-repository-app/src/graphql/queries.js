@@ -59,6 +59,7 @@ export const ME = gql`
             repository {
               name
               ownerName
+              url
             }
             repositoryId
             text

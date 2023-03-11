@@ -23,6 +23,7 @@ const AppBar = () => {
       </View>
     );
   }
+
   console.log(me);
   return (
     <View style={styles.container}>
