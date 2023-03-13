@@ -30,7 +30,9 @@ const RepositoryInfo = ({ repository }) => {
 const Repository = () => {
   const id = useParams().id;
   console.log(id);
-  const { repository, loading } = useRepository(id);
+  const { repository, loading, fetchMore } = useRepository(id, {
+    reviewsFirst: 2,
+  });
 
   if (loading) {
     return (
@@ -51,6 +53,8 @@ const Repository = () => {
       data={reviews}
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ id }) => id}
+      onEndReached={fetchMore}
+      onEndReachedThreshold={0.1}
       ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
       ItemSeparatorComponent={() => <View style={separatorStyle.separator} />}
     />

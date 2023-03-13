@@ -1,12 +1,11 @@
 import { FlatList, View, StyleSheet } from "react-native";
 import RepositoryItem from "./RepositoryItem";
 import useRepositories from "../hooks/useRepositories";
-import Text from "./Text";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { inputStyle } from "../style";
 import TextInput from "./TextInput";
-import { useDebouncedCallback } from "use-debounce";
+import Text from "./Text";
 import { Component } from "react";
 // import useMe from "../hooks/useMe";
 
@@ -70,12 +69,24 @@ const ItemSeparator = () => <View style={styles.separator} />;
 export class RepositoryListContainer extends Component {
   renderHeader = () => {
     const RepositoryListHeader = this.props.RepositoryListHeader;
+    if (!this.hasRepositories()) {
+      return (
+        <View>
+          <RepositoryListHeader />
+          <Text> No repositories...</Text>
+        </View>
+      );
+    }
     return <RepositoryListHeader />;
   };
 
   getRepositories() {
     const repositories = this.props.repositories;
     return repositories ? repositories.edges.map((e) => e.node) : [];
+  }
+
+  hasRepositories() {
+    return this.getRepositories().length !== 0;
   }
 
   render() {
@@ -85,6 +96,8 @@ export class RepositoryListContainer extends Component {
           data={this.getRepositories()}
           ItemSeparatorComponent={ItemSeparator}
           ListHeaderComponent={this.renderHeader}
+          onEndReached={this.props.onEndReach}
+          onEndReachedThreshold={0.1}
           renderItem={({ item }) => <RepositoryItem repository={item} />}
         />
       </View>
@@ -92,6 +105,7 @@ export class RepositoryListContainer extends Component {
   }
 }
 
+/*
 export const RepositoryListContainerFunction = ({
   repositories,
   ListHeader,
@@ -102,9 +116,9 @@ export const RepositoryListContainerFunction = ({
     ? repositories.edges.map((edge) => edge.node)
     : [];
 
-  const repositoryNodes = /* me
+  const repositoryNodes =  me
     ? repositoryAllNodes.filter((n) => n.userHasReviewed)
-    : */ repositoryAllNodes;
+    :  repositoryAllNodes;
 
   if (!repositoryNodes.length) {
     return (
@@ -121,25 +135,22 @@ export const RepositoryListContainerFunction = ({
         ItemSeparatorComponent={ItemSeparator}
         ListHeaderComponent={ListHeader}
         renderItem={({ item }) => <RepositoryItem repository={item} />}
+        onEndReached={onEndReach}
       />
     </View>
   );
-};
+}; */
 
 const ListHeader = ({ useSorting, useKeyword }) => {
   const SearchBox = () => {
     const [keyword, setKeyword] = useKeyword;
     const [text, setText] = useState(keyword);
-    const lazySetKeyword = useDebouncedCallback(() => {
-      setKeyword(text);
-    }, 500);
     return (
       <View>
         <TextInput
-          onChangeText={(value) => {
-            setText(value);
-            lazySetKeyword();
-          }}
+          onChangeText={setText}
+          onEndEditing={() => setKeyword(text)}
+          placeholder="Type filter here..."
           value={text}
           style={inputStyle.input}
         />
@@ -176,16 +187,23 @@ const ListHeader = ({ useSorting, useKeyword }) => {
 };
 
 const RepositoryList = () => {
-  const { useKeyword, useSorting, repositories } = useRepositories();
+  const { useKeyword, useSorting, repositories, fetchMore } = useRepositories({
+    first: 2,
+  });
 
   const Header = () => (
     <ListHeader useKeyword={useKeyword} useSorting={useSorting} />
   );
 
+  const onEndReach = () => {
+    fetchMore();
+  };
+
   return (
     <RepositoryListContainer
       repositories={repositories}
       RepositoryListHeader={Header}
+      onEndReach={onEndReach}
     />
   );
 };
